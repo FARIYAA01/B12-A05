@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emergency Service Directory</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.6.4/dist/full.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+
+  <!-- 🔰 Banner Section -->
+  <section class="bg-green-700 text-white py-6 text-center">
+    <h1 class="text-3xl font-bold">Emergency Service Directory</h1>
+    <p class="text-sm mt-2">Government of the People's Republic of Bangladesh</p>
+  </section>
+
+  <!-- 💡 Emergency Hotline Section -->
+  <section class="p-6">
+    <h2 class="text-xl font-bold mb-4">Emergency Hotlines</h2>
+    <div id="hotline-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Cards will be injected here -->
+    </div>
+  </section>
+
+  <!-- 📜 Call History Section -->
+  <section class="bg-white p-6 mt-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold flex items-center gap-2">
+        <span>📞</span> Call History
+      </h2>
+      <button onclick="clearHistory()" class="btn btn-sm btn-error text-white">🗑️ Clear History</button>
+    </div>
+    <ul id="call-history" class="space-y-2">
+      <!-- History items will appear here -->
+    </ul>
+  </section>
+
+  <script>
+    let coins = 100;
+    let copyCount = 0;
+
+    const services = [
+      { name: "National Emergency", number: "999", category: "General", icon: "🚨" },
+      { name: "Police Helpline", number: "999", category: "Police", icon: "👮" },
+      { name: "Fire Service", number: "999", category: "Fire", icon: "🔥" },
+      { name: "Ambulance Service", number: "1994-999999", category: "Health", icon: "🚑" },
+      { name: "Women & Child Helpline", number: "109", category: "Support", icon: "👩‍👧" },
+      { name: "Anti-Corruption Helpline", number: "106", category: "Legal", icon: "⚖️" },
+    ];
+
+    const hotlineContainer = document.getElementById("hotline-container");
+    const callHistory = document.getElementById("call-history");
+
+    services.forEach(service => {
+      const card = document.createElement("div");
+      card.className = "card bg-base-100 shadow-md p-4";
+
+      card.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xl">💗</span>
+          <span class="badge badge-info">${service.category}</span>
+        </div>
+        <div class="text-4xl mb-2">${service.icon}</div>
+        <h3 class="text-lg font-bold">${service.name}</h3>
+        <p class="font-mono text-lg mt-2">${service.number}</p>
+        <div class="mt-4 flex gap-2">
+          <button class="btn btn-sm btn-outline btn-info" onclick="copyNumber('${service.number}')">📋 Copy</button>
+          <button class="btn btn-sm btn-success text-white" onclick="callService('${service.name}', '${service.number}')">📞 Call</button>
+        </div>
+      `;
+      hotlineContainer.appendChild(card);
+    });
+
+    function copyNumber(number) {
+      navigator.clipboard.writeText(number);
+      copyCount++;
+      alert(`Number ${number} copied! Total copies: ${copyCount}`);
+    }
+
+    function callService(name, number) {
+      if (coins < 20) {
+        alert("Not enough coins to make a call!");
+        return;
+      }
+
+      coins -= 20;
+      alert(`Calling ${name} at ${number}. Coins left: ${coins}`);
+
+      const time = new Date().toLocaleTimeString();
+      const li = document.createElement("li");
+      li.className = "border p-2 rounded-md";
+      li.textContent = `${name} (${number}) at ${time}`;
+      callHistory.appendChild(li);
+    }
+
+    function clearHistory() {
+      callHistory.innerHTML = "";
+      alert("Call history cleared.");
+    }
+  </script>
+</body>
+</html>
